@@ -1,0 +1,26 @@
+# 云端供应商与预算配置（模型全部走云端；密钥只从环境变量读取，不写入仓库）
+llm:
+  provider: deepseek
+  base_url: https://api.deepseek.com
+  model: deepseek-v4-flash   # T3 做真实调用时验证；若不可用则改为官网当前可用的 flash 模型
+  api_key_env: DEEPSEEK_API_KEY
+  timeout_s: 180
+  max_retries: 3
+  # 单价：人民币 / 百万 tokens，取 2026-08 公布的 V4-Flash 高峰价（保守上限，偏高估算）。
+  # 资料来源不一致，实际以 DeepSeek 官网账单为准；修改后请同步 docs/env.md。
+  price_cny_per_million:
+    input_cache_hit: 0.10
+    input_cache_miss: 3.0
+    output: 9.0
+tts:
+  primary: edge            # edge = Microsoft Edge 在线语音（免密钥）
+  voice_female: zh-CN-XiaoxiaoNeural
+  voice_male: zh-CN-YunxiNeural
+  fallback: sapi           # Windows 自带语音（离线兜底，音色较弱）
+asr:
+  provider: none           # 未配置云端 ASR：有 SRT 字幕时直接使用字幕
+ocr:
+  provider: none           # 未配置云端 OCR：本阶段不做画面字幕识别
+budget:
+  max_cny_per_drama: 30
+  max_minutes_per_drama: 30
